@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Babajide Alao — Data Analyst & ML Builder</title>
+  <meta name="description" content="Portfolio of Babajide Alao, Senior Data Analyst in Lagos, Nigeria. Dashboards, machine learning and data stories." />
+  <meta property="og:title" content="Babajide Alao — Data Analyst & ML Builder" />
+  <meta property="og:description" content="Dashboards, machine learning and data stories from Lagos, Nigeria." />
+  <meta property="og:image" content="profile.jpg" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230b1020'/><rect x='20' y='55' width='14' height='25' rx='3' fill='%232dd4bf'/><rect x='43' y='35' width='14' height='45' rx='3' fill='%23fbbf24'/><rect x='66' y='20' width='14' height='60' rx='3' fill='%23a78bfa'/></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+
+  <header class="nav" id="nav">
+    <a href="#home" class="logo" aria-label="Home"><span class="bars"><i></i><i></i><i></i></span><span>babajide<span class="dot">.</span>data</span></a>
+    <nav class="links" id="links">
+      <a href="#about">About</a>
+      <a href="#projects">Projects</a>
+      <a href="#journey">Journey</a>
+      <a href="#play">Play</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn" id="termBtn" title="Open terminal (press `)" aria-label="Open terminal">&gt;_</button>
+      <button class="icon-btn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme">◐</button>
+      <button class="icon-btn menu" id="menuBtn" aria-label="Menu">☰</button>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <canvas id="heroCanvas" aria-hidden="true"></canvas>
+    <div class="hero-inner">
+      <div class="hero-text">
+        <p class="eyebrow mono">// hello, world — I'm</p>
+        <h1>Babajide Alao</h1>
+        <h2 class="typed-line">I'm a <span id="typed" class="accent"></span><span class="caret">|</span></h2>
+        <p class="lead">Senior Data Analyst in Lagos, Nigeria. I turn messy operational data into dashboards people actually use, and build machine-learning models that ship as real apps.</p>
+        <div class="cta">
+          <a href="#projects" class="btn primary">Explore my work ↓</a>
+          <a href="Babajide_Alao_Resume.pdf" class="btn ghost" download>Download résumé</a>
+        </div>
+        <p class="hint mono">💡 tip: click anywhere in the background to add data points and watch the model refit.</p>
+      </div>
+      <div class="hero-photo">
+        <div class="photo-ring">
+          <img src="profile.jpg" alt="Portrait of Babajide Alao" id="photo" />
+        </div>
+        <div class="chip float c1 mono">R² = <span id="r2">0.00</span></div>
+        <div class="chip float c2 mono">n = <span id="npts">0</span></div>
+        <div class="chip float c3">📍 Lagos, NG</div>
+      </div>
+    </div>
+    <a href="#about" class="scroll-cue" aria-label="Scroll down"><span></span></a>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats reveal">
+    <div class="stat"><b data-count="4" data-suffix="+">0</b><span>years in data</span></div>
+    <div class="stat"><b data-count="45" data-suffix="%">0</b><span>less manual reporting time</span></div>
+    <div class="stat"><b data-count="14" data-suffix="">0</b><span>public projects</span></div>
+    <div class="stat"><b data-count="99.3" data-suffix="%" data-dec="1">0</b><span>dog-breed model test accuracy</span></div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section" id="about">
+    <div class="section-head reveal">
+      <span class="mono num">01</span><h2>About me</h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>I started out as a <b>Zoology graduate</b> who got curious about patterns, and ended up in data. Since 2021 I've grown at <b>Hugo Technologies</b> from Data Annotation Specialist to <b>Senior Data Analyst, AI Operations</b>, building the KPI dashboards, automations and data-quality systems that keep AI teams productive.</p>
+        <p>Outside of work I build end-to-end ML projects: I scrape the data, clean it, model it and deploy it as a Streamlit app you can play with.</p>
+        <div class="badges">
+          <span class="badge">🏆 Award of Excellence, ML Dept. 2022</span>
+          <span class="badge">🎓 IBM Data Science Professional</span>
+          <span class="badge">🎓 IBM Data Analyst Professional</span>
+          <span class="badge">🎓 WorldQuant Applied Data Science Lab</span>
+          <span class="badge">🎓 Udacity / ALX Data Analysis</span>
+          <span class="badge">📊 PwC Switzerland Power BI Case</span>
+        </div>
+      </div>
+      <div class="skills reveal">
+        <p class="mono small muted">click a skill to filter my projects →</p>
+        <div class="skill-group"><h4>Languages</h4><div class="skill-cloud" data-group="lang"></div></div>
+        <div class="skill-group"><h4>ML & Data</h4><div class="skill-cloud" data-group="ml"></div></div>
+        <div class="skill-group"><h4>BI & Visualization</h4><div class="skill-cloud" data-group="bi"></div></div>
+        <div class="skill-group"><h4>Databases & Cloud</h4><div class="skill-cloud" data-group="db"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section class="section" id="projects">
+    <div class="section-head reveal">
+      <span class="mono num">02</span><h2>Projects</h2>
+    </div>
+    <div class="filters reveal" id="filters">
+      <button class="filter active" data-filter="all">All</button>
+      <button class="filter" data-filter="live">🚀 Live apps</button>
+      <button class="filter" data-filter="ml">Machine learning</button>
+      <button class="filter" data-filter="dl">Deep learning</button>
+      <button class="filter" data-filter="analysis">Analysis & viz</button>
+      <button class="filter" data-filter="sql">SQL</button>
+    </div>
+    <p class="mono small muted filter-note" id="filterNote"></p>
+    <div class="project-grid" id="projectGrid"></div>
+  </section>
+
+  <!-- JOURNEY -->
+  <section class="section" id="journey">
+    <div class="section-head reveal">
+      <span class="mono num">03</span><h2>Career journey</h2>
+    </div>
+    <p class="muted reveal">A timeline chart, naturally. Hover or tap a bar to see what I did there.</p>
+    <div class="gantt reveal" id="gantt">
+      <div class="gantt-axis" id="ganttAxis"></div>
+      <div class="gantt-rows" id="ganttRows"></div>
+    </div>
+    <div class="gantt-detail reveal" id="ganttDetail"></div>
+  </section>
+
+  <!-- PLAY -->
+  <section class="section" id="play">
+    <div class="section-head reveal">
+      <span class="mono num">04</span><h2>Play: Guess the correlation</h2>
+    </div>
+    <p class="muted reveal">Every data analyst should be able to eyeball an <i>r</i>. Drag the slider to your guess and hit submit. Get within 0.10 to grow your streak.</p>
+    <div class="game reveal">
+      <canvas id="gameCanvas" width="420" height="420"></canvas>
+      <div class="game-panel">
+        <div class="score-row">
+          <div><span class="muted small">Score</span><b id="score">0</b></div>
+          <div><span class="muted small">Streak</span><b id="streak">0 🔥</b></div>
+          <div><span class="muted small">Best</span><b id="best">0</b></div>
+        </div>
+        <label for="guess" class="mono">your guess: <b id="guessVal">0.00</b></label>
+        <input type="range" id="guess" min="-1" max="1" step="0.01" value="0" />
+        <div class="range-labels mono small"><span>-1</span><span>0</span><span>+1</span></div>
+        <div class="game-btns">
+          <button class="btn primary" id="submitGuess">Submit guess</button>
+          <button class="btn ghost" id="nextRound" disabled>Next plot →</button>
+        </div>
+        <p id="gameMsg" class="game-msg">Round 1. What's the correlation?</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="section contact" id="contact">
+    <div class="section-head reveal">
+      <span class="mono num">05</span><h2>Let's work together</h2>
+    </div>
+    <div class="contact-card reveal">
+      <p class="lead">Open to data analyst, BI and ML roles, and happy to relocate. If you have messy data and big questions, let's talk.</p>
+      <div class="contact-links">
+        <a class="btn primary" href="mailto:Alaobabajide.a@gmail.com">✉️ Alaobabajide.a@gmail.com</a>
+        <a class="btn ghost" href="https://www.linkedin.com/in/babajide-alao/" target="_blank" rel="noopener">LinkedIn ↗</a>
+        <a class="btn ghost" href="https://github.com/BabajideAlao-knn" target="_blank" rel="noopener">GitHub ↗</a>
+        <a class="btn ghost" href="https://public.tableau.com/app/profile/babajide.alao" target="_blank" rel="noopener">Tableau Public ↗</a>
+      </div>
+      <button class="copy mono small" id="copyEmail">copy email</button>
+    </div>
+  </section>
+
+  <footer class="footer mono small">
+    <p>Built with plain HTML, CSS & JavaScript · hosted on GitHub Pages · © <span id="year"></span> Babajide Alao</p>
+    <p class="muted">psst… try pressing <kbd>`</kbd> or the Konami code.</p>
+  </footer>
+
+  <!-- PROJECT MODAL -->
+  <div class="modal" id="modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- TERMINAL -->
+  <div class="terminal" id="terminal" aria-hidden="true">
+    <div class="term-bar"><i></i><i></i><i></i><span class="mono">babajide@portfolio: ~</span><button id="termClose" aria-label="Close terminal">✕</button></div>
+    <div class="term-out mono" id="termOut"></div>
+    <div class="term-in mono"><span class="prompt">➜ ~</span><input id="termInput" autocomplete="off" spellcheck="false" aria-label="Terminal input" /></div>
+  </div>
+
+  <canvas id="confetti" aria-hidden="true"></canvas>
+  <div class="toast" id="toast"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
