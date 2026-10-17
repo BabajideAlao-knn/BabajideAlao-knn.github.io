@@ -22,6 +22,7 @@
     <nav class="links" id="links">
       <a href="#about">About</a>
       <a href="#projects">Projects</a>
+      <a href="#dashboards">Dashboards</a>
       <a href="#journey">Journey</a>
       <a href="#play">Play</a>
       <a href="#contact">Contact</a>
@@ -77,8 +78,15 @@
       <div class="about-text reveal">
         <p>I started out as a <b>Zoology graduate</b> who got curious about patterns, and ended up in data. Since 2021 I've grown at <b>Hugo Technologies</b> from Data Annotation Specialist to <b>Senior Data Analyst, AI Operations</b>, building the KPI dashboards, automations and data-quality systems that keep AI teams productive.</p>
         <p>Outside of work I build end-to-end ML projects: I scrape the data, clean it, model it and deploy it as a Streamlit app you can play with.</p>
+        <p>Away from the screen, I love meeting new people, travelling to new places, and catching up on anime.</p>
+        <div class="hobbies">
+          <span class="hobby" data-msg="Always up for a good conversation. Say hi! 👋">🤝 Meeting people</span>
+          <span class="hobby" data-msg="Next stop? Open to relocation, so maybe your city ✈️">✈️ Travelling</span>
+          <span class="hobby" data-msg="Ask me for anime recommendations 🍥">🎌 Anime</span>
+        </div>
         <div class="badges">
           <span class="badge">🏆 Award of Excellence, ML Dept. 2022</span>
+          <span class="badge">🌍 KaggleX BIPOC Mentorship Program 2023 (Mentee)</span>
           <span class="badge">🎓 IBM Data Science Professional</span>
           <span class="badge">🎓 IBM Data Analyst Professional</span>
           <span class="badge">🎓 WorldQuant Applied Data Science Lab</span>
@@ -113,10 +121,19 @@
     <div class="project-grid" id="projectGrid"></div>
   </section>
 
+  <!-- DASHBOARDS -->
+  <section class="section" id="dashboards">
+    <div class="section-head reveal">
+      <span class="mono num">03</span><h2>Power BI dashboards</h2>
+    </div>
+    <p class="muted reveal">Click a dashboard to open it full-size. Use the arrow keys to flip through them.</p>
+    <div class="dash-grid" id="dashGrid"></div>
+  </section>
+
   <!-- JOURNEY -->
   <section class="section" id="journey">
     <div class="section-head reveal">
-      <span class="mono num">03</span><h2>Career journey</h2>
+      <span class="mono num">04</span><h2>Career journey</h2>
     </div>
     <p class="muted reveal">A timeline chart, naturally. Hover or tap a bar to see what I did there.</p>
     <div class="gantt reveal" id="gantt">
@@ -129,10 +146,21 @@
   <!-- PLAY -->
   <section class="section" id="play">
     <div class="section-head reveal">
-      <span class="mono num">04</span><h2>Play: Guess the correlation</h2>
+      <span class="mono num">05</span><h2>Play: the data arcade</h2>
     </div>
-    <p class="muted reveal">Every data analyst should be able to eyeball an <i>r</i>. Drag the slider to your guess and hit submit. Get within 0.10 to grow your streak.</p>
-    <div class="game reveal">
+    <p class="muted reveal">Five mini-games built on everyday analyst skills. Pick one and see how sharp your data instincts are.</p>
+    <div class="game-tabs reveal" role="tablist">
+      <button class="gtab active" data-game="corr" role="tab">📈 Guess the correlation</button>
+      <button class="gtab" data-game="outlier" role="tab">🎯 Spot the outlier</button>
+      <button class="gtab" data-game="fit" role="tab">📏 Fit the line</button>
+      <button class="gtab" data-game="detective" role="tab">🕵️ Data detective</button>
+      <button class="gtab" data-game="mean" role="tab">📊 Guess the average</button>
+    </div>
+
+    <!-- 1. correlation -->
+    <div class="gpanel active" data-panel="corr">
+    <p class="muted game-intro">Every data analyst should be able to eyeball an <i>r</i>. Drag the slider to your guess and hit submit. Get within 0.10 to grow your streak.</p>
+    <div class="game">
       <canvas id="gameCanvas" width="420" height="420"></canvas>
       <div class="game-panel">
         <div class="score-row">
@@ -150,12 +178,92 @@
         <p id="gameMsg" class="game-msg">Round 1. What's the correlation?</p>
       </div>
     </div>
+    </div>
+
+    <!-- 2. outlier -->
+    <div class="gpanel" data-panel="outlier">
+      <p class="muted game-intro">One of these points doesn't follow the trend. Click it. Each streak makes the outlier sneakier.</p>
+      <div class="game">
+        <canvas id="outCanvas" width="420" height="420"></canvas>
+        <div class="game-panel">
+          <div class="score-row">
+            <div><span class="muted small">Score</span><b id="outScore">0</b></div>
+            <div><span class="muted small">Streak</span><b id="outStreak">0 🔥</b></div>
+            <div><span class="muted small">Level</span><b id="outLevel">1</b></div>
+          </div>
+          <p id="outMsg" class="game-msg">Click the point that doesn't belong.</p>
+          <div class="game-btns"><button class="btn ghost" id="outNext" disabled>Next plot →</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. fit the line -->
+    <div class="gpanel" data-panel="fit">
+      <p class="muted game-intro">Be the regression. Drag the two handles up and down to draw your best-fit line, then see how close you got to least squares.</p>
+      <div class="game">
+        <canvas id="fitCanvas" width="420" height="420"></canvas>
+        <div class="game-panel">
+          <div class="score-row">
+            <div><span class="muted small">Last</span><b id="fitLast">–</b></div>
+            <div><span class="muted small">Total</span><b id="fitScore">0</b></div>
+            <div><span class="muted small">Best round</span><b id="fitBest">0</b></div>
+          </div>
+          <div class="game-btns">
+            <button class="btn primary" id="fitSubmit">Lock in my line</button>
+            <button class="btn ghost" id="fitNext" disabled>Next plot →</button>
+          </div>
+          <p id="fitMsg" class="game-msg">Drag the ● handles at each end of the line.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. data detective -->
+    <div class="gpanel" data-panel="detective">
+      <p class="muted game-intro">My day job includes keeping data clean. Here's a messy staff table: click every cell you think is dirty (impossible values, typos, blanks, duplicate IDs, bad dates), then hit check.</p>
+      <div class="game detective">
+        <div class="table-wrap"><table id="detTable" class="mono"></table></div>
+        <div class="game-panel">
+          <div class="score-row">
+            <div><span class="muted small">Score</span><b id="detScore">0</b></div>
+            <div><span class="muted small">Errors</span><b id="detCount">?</b></div>
+            <div><span class="muted small">Time</span><b id="detTime">0s</b></div>
+          </div>
+          <div class="game-btns">
+            <button class="btn primary" id="detCheck">Check my audit</button>
+            <button class="btn ghost" id="detNew">New dataset →</button>
+          </div>
+          <p id="detMsg" class="game-msg">Find the dirty cells. Wrong flags cost points!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. guess the mean -->
+    <div class="gpanel" data-panel="mean">
+      <p class="muted game-intro">Here's a histogram. Slide to where you think the <b>mean</b> is. Watch out for skewed data: the mean gets pulled toward the long tail.</p>
+      <div class="game">
+        <canvas id="meanCanvas" width="420" height="420"></canvas>
+        <div class="game-panel">
+          <div class="score-row">
+            <div><span class="muted small">Score</span><b id="meanScore">0</b></div>
+            <div><span class="muted small">Streak</span><b id="meanStreak">0 🔥</b></div>
+            <div><span class="muted small">Round</span><b id="meanRound">1</b></div>
+          </div>
+          <label for="meanGuess" class="mono">your guess: <b id="meanVal">0</b></label>
+          <input type="range" id="meanGuess" min="0" max="100" step="0.1" value="50" />
+          <div class="game-btns">
+            <button class="btn primary" id="meanSubmit">Submit guess</button>
+            <button class="btn ghost" id="meanNext" disabled>Next histogram →</button>
+          </div>
+          <p id="meanMsg" class="game-msg">Where's the mean?</p>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- CONTACT -->
   <section class="section contact" id="contact">
     <div class="section-head reveal">
-      <span class="mono num">05</span><h2>Let's work together</h2>
+      <span class="mono num">06</span><h2>Let's work together</h2>
     </div>
     <div class="contact-card reveal">
       <p class="lead">Open to data analyst, BI and ML roles, and happy to relocate. If you have messy data and big questions, let's talk.</p>
@@ -187,6 +295,17 @@
     <div class="term-bar"><i></i><i></i><i></i><span class="mono">babajide@portfolio: ~</span><button id="termClose" aria-label="Close terminal">✕</button></div>
     <div class="term-out mono" id="termOut"></div>
     <div class="term-in mono"><span class="prompt">➜ ~</span><input id="termInput" autocomplete="off" spellcheck="false" aria-label="Terminal input" /></div>
+  </div>
+
+  <!-- DASHBOARD LIGHTBOX -->
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lb-btn lb-close" id="lbClose" aria-label="Close">✕</button>
+    <button class="lb-btn lb-prev" id="lbPrev" aria-label="Previous dashboard">‹</button>
+    <figure class="lb-fig">
+      <img id="lbImg" alt="" />
+      <figcaption id="lbCap"></figcaption>
+    </figure>
+    <button class="lb-btn lb-next" id="lbNext" aria-label="Next dashboard">›</button>
   </div>
 
   <canvas id="confetti" aria-hidden="true"></canvas>

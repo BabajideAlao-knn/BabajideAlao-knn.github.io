@@ -59,10 +59,12 @@ const PROJECTS = [
   {
     title: "Eye Disease Classification",
     emoji: "👁️", cats: ["dl", "ml"], repo: "Eye-Disease-Classification",
-    short: "A CNN that classifies retinal images into cataract, glaucoma, diabetic retinopathy or normal, for earlier diagnosis.",
-    metric: "4 classes · ~4,200 retinal images",
+    article: "https://medium.com/@alaobabajide.a/visionary-ai-detecting-eye-diseases-with-deep-learning-e8e4f40988e4",
+    short: "Built during the KaggleX BIPOC Mentorship Program 2023: a CNN that classifies retinal images into cataract, glaucoma, diabetic retinopathy or normal.",
+    metric: "KaggleX 2023 · 4 classes · ~4,200 images",
     skills: ["Python", "CNNs"],
     points: [
+      "My project as a mentee on the KaggleX BIPOC Mentorship Program 2023, written up in my Medium article \"Visionary AI\".",
       "Images from IDRiD, Ocular recognition, HRF and more, via Kaggle.",
       "Trained on 3,374 images, validated on 843.",
       "Convolution + max-pooling feature extractor feeding fully-connected layers on 224×224 inputs.",
@@ -173,6 +175,60 @@ const PROJECTS = [
   },
 ];
 
+const DASHBOARDS = [
+  {
+    img: "dash-mexico-toys.jpg", title: "Mexico Toys: Sales Analysis",
+    kpis: ["$14.44M sales", "$4.01M gross profit"],
+    desc: "Sales performance for a Mexican toy-store chain across product categories, store locations and cities, 2017 vs 2018.",
+    insights: [
+      "Toys is the biggest category at $5.1M in sales.",
+      "Art & Crafts doubled year over year ($0.9M → $1.8M) while Electronics dropped ($1.4M → $0.8M).",
+      "Downtown stores lead every category; Ciudad de México is the top city ($1.65M).",
+    ],
+  },
+  {
+    img: "dash-olympics.jpg", title: "Maven Olympics Challenge",
+    kpis: ["207 countries", "223K summer athletes", "49K winter athletes"],
+    desc: "120+ years of Olympic history: participation, sports, events and medals for the Maven Analytics challenge.",
+    insights: [
+      "The USA sent the most athletes (18.9K) and won the most golds (2.6K).",
+      "Athletics, Gymnastics and Swimming are the most-entered sports.",
+      "Michael Phelps (28) and Larisa Latynina (18) top the all-time medal tables.",
+    ],
+  },
+  {
+    img: "dash-superbowl.jpg", title: "Super Bowl Commercial Analysis",
+    kpis: ["10 brands", "$1.28bn est. ad spend", "372M YouTube views"],
+    desc: "What makes a Super Bowl ad? Views, likes, spend and creative themes (funny, patriotic, celebrity, animals…) by brand.",
+    insights: [
+      "Bud Light ran the most commercials (62), drew the most TV views and had the highest estimated spend ($225M).",
+      "Doritos led on YouTube likes despite far fewer ads.",
+      "Most ads skip patriotic themes; about a third feature animals.",
+    ],
+  },
+  {
+    img: "dash-usa-travel.jpg", title: "USA International Travel Analysis",
+    kpis: ["4bn passengers", "46 countries"],
+    desc: "Three decades of international air passengers from the USA: growth, seasonality and the most and least visited countries.",
+    insights: [
+      "Passengers grew from 74M (1990) to 224M (2019) before collapsing to 30M during the pandemic.",
+      "Canada, Mexico and the UK are the top destinations.",
+      "Travel peaks in July and August; February is the quietest month.",
+    ],
+  },
+];
+
+DASHBOARDS.push({
+  img: "dash-hr-diversity.jpg", title: "HR: Geographical & Age Diversity",
+  kpis: ["15 nationalities", "32 average age"],
+  desc: "Workforce diversity report: age bands, nationalities, and promotions by department across FY20 and FY21.",
+  insights: [
+    "Most employees are in their 20s and 30s, with an average age of 32.",
+    "15 nationalities, led by Switzerland, then France and Germany.",
+    "Operations and Sales & Marketing are the largest departments and account for most promotions in both years.",
+  ],
+});
+
 const JOBS = [
   { role: "Administrative Officer", org: "Kunbinyin Global Ventures", from: 2018.0, to: 2020.0, color: "#64748b",
     pts: ["Processed bills, payments and receipts worth millions of naira with the accounts team.", "Prepared cost reports and office budgets.", "Liaised with HR to build the employee database and schedule payroll."] },
@@ -197,11 +253,12 @@ const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const savedTheme = (() => { try { return localStorage.getItem("theme"); } catch { return null; } })();
 if (savedTheme) document.documentElement.dataset.theme = savedTheme;
 else if (matchMedia("(prefers-color-scheme: light)").matches) document.documentElement.dataset.theme = "light";
+const REDRAW = [];
 function toggleTheme() {
   const t = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
   document.documentElement.dataset.theme = t;
   try { localStorage.setItem("theme", t); } catch {}
-  drawGame();
+  REDRAW.forEach((f) => f());
 }
 $("#themeBtn").onclick = toggleTheme;
 
@@ -220,7 +277,7 @@ $("#year").textContent = new Date().getFullYear();
 
 /* ---------- typed roles ---------- */
 (function typed() {
-  const words = ["Senior Data Analyst", "dashboard architect", "ML model builder", "data storyteller", "Power BI enthusiast", "data-quality guardian"];
+  const words = ["Senior Data Analyst", "dashboard architect", "ML model builder", "data storyteller", "Power BI developer", "data-quality guardian"];
   const el = $("#typed");
   let w = 0, i = 0, del = false;
   (function tick() {
@@ -335,11 +392,13 @@ let skillFilter = null;
 Object.entries(SKILLS).forEach(([g, list]) => {
   const box = $(`.skill-cloud[data-group="${g}"]`);
   list.forEach((s) => {
-    const n = PROJECTS.filter((p) => p.skills.includes(s)).length;
+    const isPBI = s === "Power BI";
+    const n = isPBI ? DASHBOARDS.length : PROJECTS.filter((p) => p.skills.includes(s)).length;
     const b = document.createElement("button");
     b.className = "skill"; b.dataset.skill = s;
     b.innerHTML = s + (n ? `<span class="cnt">${n}</span>` : "");
     b.onclick = () => {
+      if (isPBI) return document.getElementById("dashboards").scrollIntoView({ behavior: "smooth" });
       if (!n) return toast(`${s}: I use it at work, no public repo yet`);
       skillFilter = skillFilter === s ? null : s;
       $$(".skill").forEach((x) => x.classList.toggle("on", x.dataset.skill === skillFilter));
@@ -515,6 +574,7 @@ $("#submitGuess").onclick = () => {
   drawGame();
 };
 $("#nextRound").onclick = () => { game.round++; newRound(); };
+REDRAW.push(() => drawGame());
 newRound();
 
 /* ---------- copy email / toast ---------- */
@@ -607,3 +667,402 @@ document.addEventListener("keydown", (e) => {
 
 /* ---------- start reveals ---------- */
 $$(".reveal").forEach((el) => io.observe(el));
+
+/* =========================================================
+   Hobbies, dashboards gallery, game tabs + 4 extra games
+   ========================================================= */
+
+/* ---------- hobbies ---------- */
+$$(".hobby").forEach((h) => (h.onclick = () => toast(h.dataset.msg)));
+
+/* ---------- dashboards + lightbox ---------- */
+let lbIndex = 0;
+DASHBOARDS.forEach((d, i) => {
+  const el = document.createElement("article");
+  el.className = "dash reveal"; el.tabIndex = 0;
+  el.innerHTML = `
+    <div class="thumb"><img src="${d.img}" alt="${d.title} Power BI dashboard" loading="lazy" /><span class="zoom">🔍 click to expand</span></div>
+    <div class="body">
+      <span class="pbi">Power BI</span>
+      <h3>${d.title}</h3>
+      <p>${d.desc}</p>
+      <div class="kpis">${d.kpis.map((k) => `<span class="kpi">${k}</span>`).join("")}</div>
+    </div>`;
+  el.onclick = () => openLightbox(i);
+  el.onkeydown = (e) => { if (e.key === "Enter") openLightbox(i); };
+  $("#dashGrid").appendChild(el);
+  io.observe(el);
+});
+function openLightbox(i) {
+  lbIndex = (i + DASHBOARDS.length) % DASHBOARDS.length;
+  const d = DASHBOARDS[lbIndex];
+  $("#lbImg").src = d.img; $("#lbImg").alt = d.title;
+  $("#lbCap").innerHTML = `<h4>${d.title} <span class="pbi">Power BI</span></h4><span class="muted small">${lbIndex + 1} / ${DASHBOARDS.length}</span><ul>${d.insights.map((x) => `<li>${x}</li>`).join("")}</ul>`;
+  $("#lightbox").classList.add("open"); $("#lightbox").setAttribute("aria-hidden", "false");
+}
+function closeLightbox() { $("#lightbox").classList.remove("open"); $("#lightbox").setAttribute("aria-hidden", "true"); }
+$("#lbClose").onclick = closeLightbox;
+$("#lbPrev").onclick = () => openLightbox(lbIndex - 1);
+$("#lbNext").onclick = () => openLightbox(lbIndex + 1);
+$("#lightbox").onclick = (e) => { if (e.target.id === "lightbox") closeLightbox(); };
+document.addEventListener("keydown", (e) => {
+  if (!$("#lightbox").classList.contains("open")) return;
+  if (e.key === "Escape") closeLightbox();
+  if (e.key === "ArrowRight") openLightbox(lbIndex + 1);
+  if (e.key === "ArrowLeft") openLightbox(lbIndex - 1);
+});
+let touchX = null;
+$("#lightbox").addEventListener("touchstart", (e) => (touchX = e.touches[0].clientX), { passive: true });
+$("#lightbox").addEventListener("touchend", (e) => {
+  if (touchX == null) return;
+  const dx = e.changedTouches[0].clientX - touchX;
+  if (Math.abs(dx) > 50) openLightbox(lbIndex + (dx < 0 ? 1 : -1));
+  touchX = null;
+});
+
+/* ---------- game tabs ---------- */
+const GAME_INIT = {};
+function showGame(name) {
+  $$(".gtab").forEach((t) => t.classList.toggle("active", t.dataset.game === name));
+  $$(".gpanel").forEach((p) => p.classList.toggle("active", p.dataset.panel === name));
+  if (GAME_INIT[name]) GAME_INIT[name]();
+}
+$$(".gtab").forEach((t) => (t.onclick = () => showGame(t.dataset.game)));
+
+/* shared helpers */
+function canvasPos(e, cv) {
+  const r = cv.getBoundingClientRect();
+  return { x: ((e.clientX - r.left) / r.width) * cv.width, y: ((e.clientY - r.top) / r.height) * cv.height };
+}
+function axes(ctx, S, pad) {
+  ctx.clearRect(0, 0, S, S);
+  ctx.strokeStyle = css("--line"); ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(pad, S - pad); ctx.lineTo(S - pad / 2, S - pad); ctx.moveTo(pad, S - pad); ctx.lineTo(pad, pad / 2); ctx.stroke();
+}
+function setMsg(el, text, kind) { el.className = "game-msg" + (kind ? " " + kind : ""); el.innerHTML = text; }
+const ols = (pts) => {
+  const n = pts.length, mx = pts.reduce((a, p) => a + p[0], 0) / n, my = pts.reduce((a, p) => a + p[1], 0) / n;
+  let sxy = 0, sxx = 0; pts.forEach(([x, y]) => { sxy += (x - mx) * (y - my); sxx += (x - mx) ** 2; });
+  const m = sxy / sxx; return { m, b: my - m * mx };
+};
+
+/* ---------- game 2: spot the outlier ---------- */
+(function outlierGame() {
+  const cv = $("#outCanvas"), ctx = cv.getContext("2d"), S = cv.width, pad = 30;
+  const st = { pts: [], out: -1, done: false, score: 0, streak: 0, level: 1, clicked: -1 };
+  const X = (x) => pad + 12 + (x / 10) * (S - pad * 2 - 20);
+  const Y = (y) => S - pad - 12 - (y / 10) * (S - pad * 2 - 20);
+  function round() {
+    const m = (Math.random() * 1.4 - 0.7), b = 5 - m * 5, sd = 0.45;
+    const n = 30 + Math.floor(Math.random() * 15);
+    st.pts = [];
+    for (let i = 0; i < n; i++) { const x = 0.3 + Math.random() * 9.4; st.pts.push([x, Math.max(0.2, Math.min(9.8, m * x + b + randn() * sd))]); }
+    // plant outlier: gets sneakier with level
+    const k = Math.max(2.6, 6.5 - st.level * 0.5) * sd;
+    const ox = 1 + Math.random() * 8;
+    let oy = m * ox + b + (Math.random() < 0.5 ? -1 : 1) * k;
+    if (oy < 0.3 || oy > 9.7) oy = m * ox + b - Math.sign(oy - 5) * k;
+    st.out = Math.floor(Math.random() * n);
+    st.pts[st.out] = [ox, oy];
+    st.done = false; st.clicked = -1;
+    $("#outNext").disabled = true;
+    setMsg($("#outMsg"), `Level ${st.level}. Click the point that doesn't belong.`);
+    draw();
+  }
+  function draw() {
+    axes(ctx, S, pad);
+    st.pts.forEach(([x, y], i) => {
+      ctx.fillStyle = css("--violet"); ctx.globalAlpha = 0.85;
+      ctx.beginPath(); ctx.arc(X(x), Y(y), 5.5, 0, 7); ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+    if (st.done) {
+      const f = ols(st.pts.filter((_, i) => i !== st.out));
+      ctx.strokeStyle = css("--teal"); ctx.lineWidth = 2; ctx.setLineDash([8, 6]);
+      ctx.beginPath(); ctx.moveTo(X(0), Y(f.b)); ctx.lineTo(X(10), Y(f.m * 10 + f.b)); ctx.stroke(); ctx.setLineDash([]);
+      const [ox, oy] = st.pts[st.out];
+      ctx.strokeStyle = css("--pink"); ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.arc(X(ox), Y(oy), 14, 0, 7); ctx.stroke();
+      if (st.clicked >= 0 && st.clicked !== st.out) {
+        const [cx, cy] = st.pts[st.clicked];
+        ctx.strokeStyle = css("--amber"); ctx.beginPath(); ctx.arc(X(cx), Y(cy), 11, 0, 7); ctx.stroke();
+      }
+    }
+  }
+  cv.addEventListener("click", (e) => {
+    if (st.done) return;
+    const p = canvasPos(e, cv);
+    let best = -1, bd = 1e9;
+    st.pts.forEach(([x, y], i) => { const d = Math.hypot(X(x) - p.x, Y(y) - p.y); if (d < bd) { bd = d; best = i; } });
+    if (bd > 26) return;
+    st.done = true; st.clicked = best;
+    if (best === st.out) {
+      st.streak++; const pts = 50 + st.level * 10; st.score += pts; st.level++;
+      setMsg($("#outMsg"), `🎯 Got it! +${pts} pts. The next one will be harder to spot.`, "good");
+      if (st.streak % 3 === 0) confetti();
+    } else {
+      st.streak = 0; st.level = Math.max(1, st.level - 1);
+      setMsg($("#outMsg"), `Not quite: the outlier is circled in pink. It sits furthest from the trend line.`, "bad");
+    }
+    $("#outScore").textContent = st.score; $("#outStreak").textContent = st.streak + " 🔥"; $("#outLevel").textContent = st.level;
+    $("#outNext").disabled = false;
+    draw();
+  });
+  $("#outNext").onclick = round;
+  REDRAW.push(draw);
+  let started = false;
+  GAME_INIT.outlier = () => { if (!started) { started = true; round(); } else draw(); };
+})();
+
+/* ---------- game 3: fit the line ---------- */
+(function fitGame() {
+  const cv = $("#fitCanvas"), ctx = cv.getContext("2d"), S = cv.width, pad = 30;
+  const st = { pts: [], h: [5, 5], done: false, total: 0, best: 0, drag: -1 };
+  const XL = 0.4, XR = 9.6;
+  const X = (x) => pad + 12 + (x / 10) * (S - pad * 2 - 20);
+  const Y = (y) => S - pad - 12 - (y / 10) * (S - pad * 2 - 20);
+  const Yinv = (py) => ((S - pad - 12 - py) / (S - pad * 2 - 20)) * 10;
+  function round() {
+    const m = Math.random() * 1.6 - 0.8, b = 5 - m * 5 + (Math.random() - 0.5) * 2, sd = 0.5 + Math.random() * 1.1;
+    st.pts = [];
+    for (let i = 0; i < 40; i++) { const x = 0.3 + Math.random() * 9.4; st.pts.push([x, Math.max(0.2, Math.min(9.8, m * x + b + randn() * sd))]); }
+    st.h = [5, 5]; st.done = false;
+    $("#fitSubmit").disabled = false; $("#fitNext").disabled = true;
+    setMsg($("#fitMsg"), "Drag the ● handles at each end of the line.");
+    draw();
+  }
+  const userLine = () => { const m = (st.h[1] - st.h[0]) / (XR - XL); return { m, b: st.h[0] - m * XL }; };
+  const sse = (f) => st.pts.reduce((a, [x, y]) => a + (y - (f.m * x + f.b)) ** 2, 0);
+  function draw() {
+    axes(ctx, S, pad);
+    ctx.fillStyle = css("--violet"); ctx.globalAlpha = 0.8;
+    st.pts.forEach(([x, y]) => { ctx.beginPath(); ctx.arc(X(x), Y(y), 4.5, 0, 7); ctx.fill(); });
+    ctx.globalAlpha = 1;
+    const u = userLine();
+    if (st.done) {
+      // residuals to best line
+      const f = ols(st.pts);
+      ctx.strokeStyle = css("--teal"); ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(X(0), Y(f.b)); ctx.lineTo(X(10), Y(f.m * 10 + f.b)); ctx.stroke();
+      ctx.fillStyle = css("--teal"); ctx.font = "12px JetBrains Mono, monospace"; ctx.fillText("least squares", X(0.2), Y(f.b) - 8);
+    }
+    ctx.strokeStyle = css("--amber"); ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(X(XL), Y(st.h[0])); ctx.lineTo(X(XR), Y(st.h[1])); ctx.stroke();
+    if (!st.done) {
+      ctx.strokeStyle = css("--amber"); ctx.globalAlpha = 0.35; ctx.lineWidth = 1;
+      st.pts.forEach(([x, y]) => { ctx.beginPath(); ctx.moveTo(X(x), Y(y)); ctx.lineTo(X(x), Y(u.m * x + u.b)); ctx.stroke(); });
+      ctx.globalAlpha = 1;
+    }
+    [XL, XR].forEach((hx, i) => {
+      ctx.fillStyle = css("--amber"); ctx.beginPath(); ctx.arc(X(hx), Y(st.h[i]), 10, 0, 7); ctx.fill();
+      ctx.fillStyle = css("--bg"); ctx.beginPath(); ctx.arc(X(hx), Y(st.h[i]), 4, 0, 7); ctx.fill();
+    });
+  }
+  cv.addEventListener("pointerdown", (e) => {
+    if (st.done) return;
+    const p = canvasPos(e, cv);
+    const d = [XL, XR].map((hx, i) => Math.hypot(X(hx) - p.x, Y(st.h[i]) - p.y));
+    st.drag = d[0] < d[1] ? 0 : 1;
+    if (Math.min(...d) > 60) { st.drag = p.x < S / 2 ? 0 : 1; }
+    st.h[st.drag] = Math.max(0, Math.min(10, Yinv(p.y)));
+    cv.setPointerCapture(e.pointerId); cv.style.cursor = "grabbing"; draw();
+  });
+  cv.addEventListener("pointermove", (e) => {
+    if (st.drag < 0) return;
+    st.h[st.drag] = Math.max(0, Math.min(10, Yinv(canvasPos(e, cv).y))); draw();
+  });
+  const end = () => { st.drag = -1; cv.style.cursor = "grab"; };
+  cv.addEventListener("pointerup", end); cv.addEventListener("pointercancel", end);
+  $("#fitSubmit").onclick = () => {
+    if (st.done) return;
+    st.done = true;
+    const ratio = sse(userLine()) / sse(ols(st.pts));
+    const pts = Math.max(0, Math.round(100 - (ratio - 1) * 80));
+    st.total += pts; st.best = Math.max(st.best, pts);
+    $("#fitLast").textContent = pts; $("#fitScore").textContent = st.total; $("#fitBest").textContent = st.best;
+    const pct = Math.round((ratio - 1) * 100);
+    setMsg($("#fitMsg"), pts >= 90
+      ? `📏 Superb! Your line's squared error is only ${pct}% above least squares. ${pts} pts.`
+      : pts >= 60 ? `Not bad! ${pct}% more squared error than the optimal line. ${pts} pts.`
+      : `Your line has ${pct}% more squared error than least squares (in teal). Tip: balance the points above and below. ${pts} pts.`,
+      pts >= 60 ? "good" : "bad");
+    if (pts >= 95) confetti();
+    $("#fitSubmit").disabled = true; $("#fitNext").disabled = false;
+    draw();
+  };
+  $("#fitNext").onclick = round;
+  REDRAW.push(draw);
+  let started = false;
+  GAME_INIT.fit = () => { if (!started) { started = true; round(); } else draw(); };
+})();
+
+/* ---------- game 4: data detective ---------- */
+(function detectiveGame() {
+  const NAMES = ["Ada", "Tunde", "Chinedu", "Ngozi", "Femi", "Aisha", "Emeka", "Bola", "Kemi", "Ibrahim", "Zainab", "Segun", "Yemi", "Amaka", "Musa", "Funke"];
+  const CITIES = ["Lagos", "Abuja", "Ibadan", "Kano", "Enugu", "Port Harcourt"];
+  const TYPOS = { Lagos: "Lagso", Abuja: "Abjua", Ibadan: "Ibadn", Kano: "Knao", Enugu: "Enuug", "Port Harcourt": "Port Harcout" };
+  const DEPTS = ["Ops", "Finance", "AI Ops", "Sales", "HR"];
+  const COLS = ["ID", "Name", "Age", "City", "Dept", "Salary (₦k)", "Joined"];
+  const st = { rows: [], errors: [], flags: new Set(), done: false, score: 0, t0: 0, timer: null };
+  const pick = (a) => a[Math.floor(Math.random() * a.length)];
+  const pad2 = (n) => String(n).padStart(2, "0");
+  function newData() {
+    const names = [...NAMES].sort(() => Math.random() - 0.5);
+    st.rows = Array.from({ length: 9 }, (_, i) => [
+      String(1001 + i * 7 + Math.floor(Math.random() * 5)), names[i], String(22 + Math.floor(Math.random() * 30)),
+      pick(CITIES), pick(DEPTS), String(180 + Math.floor(Math.random() * 60) * 10),
+      `20${pad2(15 + Math.floor(Math.random() * 10))}-${pad2(1 + Math.floor(Math.random() * 12))}-${pad2(1 + Math.floor(Math.random() * 28))}`,
+    ]);
+    // plant 4-5 distinct error types in distinct rows
+    const types = ["age", "blank", "typo", "salary", "date", "dupe", "negative"].sort(() => Math.random() - 0.5).slice(0, 4 + Math.floor(Math.random() * 2));
+    const rowsAvail = [...Array(9).keys()].sort(() => Math.random() - 0.5);
+    st.errors = [];
+    types.forEach((t) => {
+      const r = rowsAvail.pop();
+      if (t === "age") { st.rows[r][2] = pick(["214", "7", "301", "0"]); st.errors.push({ cells: [`${r},2`], label: "Impossible age" }); }
+      if (t === "negative") { st.rows[r][5] = "-" + st.rows[r][5]; st.errors.push({ cells: [`${r},5`], label: "Negative salary" }); }
+      if (t === "blank") { const c = pick([1, 3, 4]); st.rows[r][c] = ""; st.errors.push({ cells: [`${r},${c}`], label: "Missing value" }); }
+      if (t === "typo") { st.rows[r][3] = TYPOS[st.rows[r][3]]; st.errors.push({ cells: [`${r},3`], label: "City typo" }); }
+      if (t === "salary") { st.rows[r][5] = pick(["abc", "2OO", "n/a?"]); st.errors.push({ cells: [`${r},5`], label: "Non-numeric salary" }); }
+      if (t === "date") { st.rows[r][6] = pick(["2031-04-12", "2022-13-05", "2021-02-30"]); st.errors.push({ cells: [`${r},6`], label: "Invalid / future date" }); }
+      if (t === "dupe") { const o = rowsAvail[rowsAvail.length - 1] ?? (r === 0 ? 1 : 0); st.rows[r][0] = st.rows[o][0]; st.errors.push({ cells: [`${r},0`, `${o},0`], label: "Duplicate ID" }); }
+    });
+    st.flags.clear(); st.done = false;
+    $("#detCount").textContent = st.errors.length;
+    $("#detCheck").disabled = false;
+    setMsg($("#detMsg"), `There are <b>${st.errors.length}</b> problems hiding in this table. Find them!`);
+    render();
+    clearInterval(st.timer); st.t0 = Date.now();
+    st.timer = setInterval(() => { if (!st.done) $("#detTime").textContent = Math.floor((Date.now() - st.t0) / 1000) + "s"; }, 500);
+  }
+  function render() {
+    const t = $("#detTable");
+    t.innerHTML = `<thead><tr>${COLS.map((c) => `<th>${c}</th>`).join("")}</tr></thead><tbody>${st.rows
+      .map((row, r) => `<tr>${row.map((v, c) => `<td data-k="${r},${c}" class="${v === "" ? "empty" : ""}">${v}</td>`).join("")}</tr>`).join("")}</tbody>`;
+    $$("td", t).forEach((td) => (td.onclick = () => {
+      if (st.done) return;
+      const k = td.dataset.k;
+      st.flags.has(k) ? st.flags.delete(k) : st.flags.add(k);
+      td.classList.toggle("flag");
+    }));
+  }
+  $("#detCheck").onclick = () => {
+    if (st.done) return;
+    st.done = true; clearInterval(st.timer);
+    const secs = Math.floor((Date.now() - st.t0) / 1000);
+    const errorCells = new Set(st.errors.flatMap((e) => e.cells));
+    let found = 0;
+    st.errors.forEach((e) => { if (e.cells.some((c) => st.flags.has(c))) found++; });
+    const wrong = [...st.flags].filter((k) => !errorCells.has(k)).length;
+    const bonus = found === st.errors.length ? Math.max(0, 60 - secs) : 0;
+    const pts = Math.max(0, found * 25 - wrong * 10 + bonus);
+    st.score += pts; $("#detScore").textContent = st.score;
+    $$("#detTable td").forEach((td) => {
+      const k = td.dataset.k; td.classList.remove("flag");
+      const isErr = errorCells.has(k), flagged = st.flags.has(k);
+      if (isErr && flagged) td.classList.add("hit");
+      else if (isErr) { const e = st.errors.find((x) => x.cells.includes(k)); if (!e.cells.some((c) => st.flags.has(c))) td.classList.add("miss"); }
+      else if (flagged) td.classList.add("wrong");
+    });
+    const list = `<ul class="det-legend">${st.errors.map((e) => `<li>${e.cells.some((c) => st.flags.has(c)) ? "✅" : "❌"} ${e.label}</li>`).join("")}</ul>`;
+    setMsg($("#detMsg"), `${found === st.errors.length && !wrong ? "🕵️ Spotless audit!" : "Audit complete."} Found ${found}/${st.errors.length}, ${wrong} false flag${wrong === 1 ? "" : "s"}${bonus ? `, +${bonus} speed bonus` : ""}. <b>+${pts} pts</b>${list}`, found === st.errors.length ? "good" : "bad");
+    if (found === st.errors.length && !wrong) confetti();
+    $("#detCheck").disabled = true;
+  };
+  $("#detNew").onclick = newData;
+  let started = false;
+  GAME_INIT.detective = () => { if (!started) { started = true; newData(); } };
+})();
+
+/* ---------- game 5: guess the average ---------- */
+(function meanGame() {
+  const cv = $("#meanCanvas"), ctx = cv.getContext("2d"), S = cv.width, pad = 34;
+  const st = { data: [], lo: 0, hi: 100, mean: 0, median: 0, done: false, score: 0, streak: 0, round: 1, ctxLabel: "", unit: "" };
+  const SCEN = [
+    { label: "Delivery time", unit: "mins", gen: () => 12 + Math.exp(2.4 + randn() * 0.55) },
+    { label: "Monthly data usage", unit: "GB", gen: () => Math.exp(2.2 + randn() * 0.7) },
+    { label: "Exam scores", unit: "pts", gen: () => Math.max(0, Math.min(100, 64 + randn() * 12)) },
+    { label: "Ride fare", unit: "₦k", gen: () => 1.5 + Math.exp(0.8 + randn() * 0.6) },
+    { label: "Daily steps", unit: "k", gen: () => Math.random() < 0.55 ? Math.max(0.5, 4 + randn() * 1.2) : 10 + randn() * 1.6 },
+    { label: "Call duration", unit: "mins", gen: () => Math.random() * 30 + 2 },
+    { label: "Customer age", unit: "yrs", gen: () => Math.max(18, 48 - Math.exp(2.6 + randn() * 0.5) + 15) },
+  ];
+  const nbins = 16;
+  function round() {
+    const sc = SCEN[Math.floor(Math.random() * SCEN.length)];
+    st.ctxLabel = sc.label; st.unit = sc.unit;
+    st.data = Array.from({ length: 220 }, sc.gen);
+    st.lo = Math.min(...st.data); st.hi = Math.max(...st.data);
+    st.mean = st.data.reduce((a, b) => a + b, 0) / st.data.length;
+    const s = [...st.data].sort((a, b) => a - b); st.median = (s[109] + s[110]) / 2;
+    const g = $("#meanGuess");
+    g.min = st.lo.toFixed(1); g.max = st.hi.toFixed(1); g.step = ((st.hi - st.lo) / 400).toFixed(3);
+    g.value = ((st.lo + st.hi) / 2).toFixed(1); $("#meanVal").textContent = (+g.value).toFixed(1) + " " + st.unit;
+    st.done = false;
+    $("#meanSubmit").disabled = false; $("#meanNext").disabled = true;
+    setMsg($("#meanMsg"), `<b>${sc.label}</b> for 220 people. Where's the mean?`);
+    draw();
+  }
+  const Xv = (v) => pad + ((v - st.lo) / (st.hi - st.lo || 1)) * (S - pad * 1.5);
+  function vline(v, color, label, yoff) {
+    ctx.strokeStyle = color; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(Xv(v), pad / 2 + 14); ctx.lineTo(Xv(v), S - pad); ctx.stroke();
+    ctx.fillStyle = color; ctx.font = "bold 12px JetBrains Mono, monospace";
+    const tw = ctx.measureText(label).width;
+    const tx = Xv(v) + 6 + tw > S - 4 ? Xv(v) - 6 - tw : Xv(v) + 6;
+    ctx.fillText(label, tx, pad / 2 + 14 + yoff);
+  }
+  function draw() {
+    axes(ctx, S, pad);
+    if (!st.data.length) return;
+    const bins = Array(nbins).fill(0), w = (st.hi - st.lo) / nbins || 1;
+    st.data.forEach((v) => bins[Math.min(nbins - 1, Math.floor((v - st.lo) / w))]++);
+    const max = Math.max(...bins), bw = (S - pad * 1.5) / nbins, H = S - pad * 2 - 20;
+    bins.forEach((c, i) => {
+      const h = (c / max) * H;
+      ctx.fillStyle = css("--violet"); ctx.globalAlpha = 0.75;
+      ctx.fillRect(pad + i * bw + 1, S - pad - h, bw - 2, h);
+    });
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = css("--muted"); ctx.font = "11px JetBrains Mono, monospace";
+    ctx.fillText(st.lo.toFixed(1), pad - 4, S - pad + 16);
+    ctx.fillText(st.hi.toFixed(1), S - pad - 20, S - pad + 16);
+    ctx.fillText(`${st.ctxLabel} (${st.unit})`, S / 2 - 70, S - 6);
+    const g = +$("#meanGuess").value;
+    vline(g, css("--amber"), "you " + g.toFixed(1), 0);
+    if (st.done) {
+      vline(st.mean, css("--teal"), "mean " + st.mean.toFixed(1), 16);
+      vline(st.median, css("--pink"), "median " + st.median.toFixed(1), 32);
+    }
+  }
+  $("#meanGuess").oninput = (e) => { $("#meanVal").textContent = (+e.target.value).toFixed(1) + " " + st.unit; if (!st.done) draw(); };
+  $("#meanSubmit").onclick = () => {
+    if (st.done) return;
+    st.done = true;
+    const g = +$("#meanGuess").value, err = Math.abs(g - st.mean) / (st.hi - st.lo);
+    const pts = Math.max(0, Math.round(100 * (1 - err / 0.12)));
+    const skew = Math.abs(st.mean - st.median) / (st.hi - st.lo) > 0.03;
+    if (err <= 0.04) { st.streak++; if (st.streak % 3 === 0) confetti(); } else st.streak = 0;
+    st.score += pts;
+    $("#meanScore").textContent = st.score; $("#meanStreak").textContent = st.streak + " 🔥";
+    const nearMedian = Math.abs(g - st.median) < Math.abs(g - st.mean) && skew;
+    setMsg($("#meanMsg"), `${err <= 0.04 ? "📊 Spot on!" : "Mean was"} ${st.mean.toFixed(1)} ${st.unit} (you: ${g.toFixed(1)}). +${pts} pts.` +
+      (nearMedian ? `<br><span class="small">You landed nearer the <b>median</b> (${st.median.toFixed(1)}). With skewed data the mean is dragged toward the tail.</span>` :
+       skew ? `<br><span class="small">Notice the gap between mean and median: that's skew.</span>` : ""), err <= 0.04 ? "good" : "bad");
+    $("#meanSubmit").disabled = true; $("#meanNext").disabled = false;
+    draw();
+  };
+  $("#meanNext").onclick = () => { st.round++; $("#meanRound").textContent = st.round; round(); };
+  REDRAW.push(draw);
+  let started = false;
+  GAME_INIT.mean = () => { if (!started) { started = true; round(); } else draw(); };
+})();
+
+/* ---------- extra terminal commands ---------- */
+CMDS.dashboards = () => DASHBOARDS.map((d, i) => `<span class="y">[${i + 1}]</span> ${d.title}`).join("\n") + `\n<span class="m">type "dash 1" to open one</span>`;
+CMDS.dash = (a) => { const i = parseInt(a) - 1; if (!DASHBOARDS[i]) return `usage: dash &lt;1-${DASHBOARDS.length}&gt;`; closeTerm(); openLightbox(i); return `opening ${DASHBOARDS[i].title}…`; };
+CMDS.games = () => `<span class="c">corr</span>  guess the correlation\n<span class="c">outlier</span>  spot the outlier\n<span class="c">fit</span>  fit the line\n<span class="c">detective</span>  data detective\n<span class="c">mean</span>  guess the average\n<span class="m">type "play &lt;name&gt;"</span>`;
+CMDS.play = (a) => { closeTerm(); location.hash = "#play"; if (a && $(`.gtab[data-game="${a}"]`)) showGame(a); return ""; };
+CMDS.hobbies = () => "🤝 meeting new people\n✈️ travelling\n🎌 anime (ask me for recommendations)";
+const _help = CMDS.help;
+CMDS.help = () => _help().replace("  <span class=\"c\">play</span>        jump to the correlation game", "  <span class=\"c\">dashboards</span>  list my Power BI dashboards\n  <span class=\"c\">games</span>       list the arcade games\n  <span class=\"c\">play</span> [game]  jump to the arcade\n  <span class=\"c\">hobbies</span>     life outside data");
